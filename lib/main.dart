@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:budget_manager_application/screens/wrapper.dart';
+import 'package:budget_manager_application/firebase_options.dart';
 import 'screens/home_page.dart';
 import 'logic/appstate.dart';
 
 void main() async {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,19 +26,11 @@ class MyApp extends StatelessWidget {
         title: 'Budget Manager',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
-              secondary: Color.fromARGB(255, 0, 18, 59),
-              seedColor: Color.fromARGB(255, 78, 111, 255)),
+              secondary: const Color.fromARGB(255, 0, 18, 59),
+              seedColor: const Color.fromARGB(255, 78, 111, 255)),
         ),
-        home: MyHomePage(),
+        home: Wrapper(),
       ),
     );
-  }
-}
-
-class GeneratorPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    //var appState = context.watch<MyAppState>();
-    return Center();
   }
 }
