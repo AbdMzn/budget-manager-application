@@ -1,32 +1,71 @@
+import 'package:budget_manager_application/logic/appstate.dart';
+import 'package:budget_manager_application/screens/no_wallet.dart';
+import 'package:budget_manager_application/screens/settings_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '/screens/transaction_page.dart';
+//import '/services/auth.dart';
 import './history_page.dart';
 import './overview_page.dart';
 
-class MyHomePage extends StatefulWidget {
+class HomePage extends StatefulWidget {
+  final User user;
+  const HomePage({super.key, required this.user});
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
+  //final AuthService _auth = AuthService();
   var selectedIndex = 0;
   var pageName = 'Home';
+  var logger = Logger();
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration.zero, () async {
+      var appState = context.read<MyAppState>();
+      appState.checkWalletsExistance(widget.user.uid);
+      await appState.initializeAppState(widget.user);
+      logger.i('walletlist Init: ${appState.walletList}');
+      logger.i('Homepage user id: ${widget.user.uid}');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    var walletExists = appState.walletExists;
+    void updateData() async {
+      await appState.checkWalletsExistance(widget.user.uid);
+      await appState.getBalance(widget.user);
+      await appState.setRecordValues(widget.user);
+      logger.i("updateData called");
+    }
+
+    var noWalletPage = NoWallet(user: widget.user, updateData: updateData);
+
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = OverviewPage();
+        page = walletExists ? OverviewPage() : noWalletPage;
         pageName = 'Home';
       case 1:
-        page = HistoryPage();
+        page = walletExists ? HistoryPage(user: widget.user) : noWalletPage;
         pageName = 'History';
       case 2:
-        page = Placeholder();
+        //page = walletExists ? const Placeholder() : noWalletPage;
+        page = noWalletPage;
         pageName = 'Budget';
       case 3:
-        page = Placeholder();
+        page = SettingsPage(
+          user: widget.user,
+          updateData: updateData,
+        );
         pageName = 'Settings';
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -47,11 +86,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TransactionPage(),
+                    builder: (context) => TransactionPage(
+                        user: widget.user, updateData: updateData),
                   ),
                 );
               },
             ),
+/*             IconButton(
+              icon: const Icon(Icons.person),
+              tooltip: 'logout',
+              onPressed: () async {
+                await _auth.signOut();
+              },
+            ), */
           ],
         ),
         body: Column(
@@ -72,22 +119,22 @@ class _MyHomePageState extends State<MyHomePage> {
           items: [
             BottomNavigationBarItem(
               backgroundColor: Theme.of(context).colorScheme.primary,
-              icon: Icon(Icons.home_rounded),
+              icon: const Icon(Icons.home_rounded),
               label: 'Home',
             ),
             BottomNavigationBarItem(
               backgroundColor: Theme.of(context).colorScheme.primary,
-              icon: Icon(Icons.calendar_today_rounded),
+              icon: const Icon(Icons.calendar_today_rounded),
               label: 'History',
             ),
             BottomNavigationBarItem(
               backgroundColor: Theme.of(context).colorScheme.primary,
-              icon: Icon(Icons.insert_chart_outlined_outlined),
+              icon: const Icon(Icons.insert_chart_outlined_outlined),
               label: 'Budget',
             ),
             BottomNavigationBarItem(
               backgroundColor: Theme.of(context).colorScheme.primary,
-              icon: Icon(Icons.settings),
+              icon: const Icon(Icons.settings),
               label: 'Settings',
             ),
           ],
@@ -95,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onTap: (value) {
             setState(() {
               selectedIndex = value;
+              appState.checkWalletsExistance(widget.user.uid);
             });
           },
         ),

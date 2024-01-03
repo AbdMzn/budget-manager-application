@@ -1,22 +1,24 @@
-import 'package:flutter/material.dart';
 import 'package:budget_manager_application/services/auth.dart';
 import 'package:budget_manager_application/shared/constants.dart';
 import 'package:budget_manager_application/shared/loading.dart';
+//import 'package:budget_manager_application/logic/appstate.dart';
+import 'package:flutter/material.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
   final Function? toggleView;
-  const SignIn({super.key, this.toggleView});
+  const Register({super.key, this.toggleView});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<Register> createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   String error = '';
   bool loading = false;
 
+  // text field state
   String email = '';
   String password = '';
 
@@ -30,7 +32,6 @@ class _SignInState extends State<SignIn> {
         borderRadius: BorderRadius.circular(15.0),
       ),
     );
-
     return loading
         ? const Loading()
         : Scaffold(
@@ -38,11 +39,10 @@ class _SignInState extends State<SignIn> {
             /* appBar: AppBar(
               backgroundColor: Colors.blue[400],
               elevation: 0.0,
-              title: const Text('Sign in'),
+              title: const Text('Sign up'),
               actions: <Widget>[
-                TextButton.icon(
+                IconButton(
                   icon: const Icon(Icons.person),
-                  label: const Text('Register'),
                   onPressed: () => widget.toggleView!(),
                 ),
               ],
@@ -52,7 +52,7 @@ class _SignInState extends State<SignIn> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Sign In",
+                  "Sign Up",
                   style: TextStyle(fontSize: 40),
                 ),
                 Container(
@@ -74,11 +74,12 @@ class _SignInState extends State<SignIn> {
                         ),
                         const SizedBox(height: 20.0),
                         TextFormField(
-                          obscureText: true,
                           decoration: textInputDecoration.copyWith(
                               hintText: 'Password'),
-                          validator: (val) =>
-                              val!.length < 8 ? 'Invalid Credentials' : null,
+                          obscureText: true,
+                          validator: (val) => val!.length < 8
+                              ? 'password must be atleast 8 characters long'
+                              : null,
                           onChanged: (val) {
                             setState(() => password = val);
                           },
@@ -87,19 +88,19 @@ class _SignInState extends State<SignIn> {
                         ElevatedButton(
                             style: style,
                             child: const Text(
-                              'Sign In',
+                              'Register',
                               style: TextStyle(color: Colors.white),
                             ),
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 setState(() => loading = true);
                                 dynamic result =
-                                    await _auth.signInWithEmailAndPassword(
+                                    await _auth.registerWithEmailAndPassword(
                                         email, password);
                                 if (result == null) {
                                   setState(() {
                                     loading = false;
-                                    error = 'Invalid credentials';
+                                    error = 'Please supply a valid email';
                                   });
                                 }
                               }
@@ -113,7 +114,7 @@ class _SignInState extends State<SignIn> {
                         const SizedBox(height: 12.0),
                         TextButton(
                           child: const Text(
-                            "Don't have an account? Sign up.",
+                            "Already have an account? Sign in.",
                             style:
                                 TextStyle(color: Colors.blue, fontSize: 14.0),
                           ),

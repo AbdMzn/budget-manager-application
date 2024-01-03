@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/logic/appstate.dart';
 import '../utils/functions.dart';
 
 class HistoryPage extends StatelessWidget {
+  final User user;
+  const HistoryPage({super.key, required this.user});
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
@@ -15,7 +18,7 @@ class HistoryPage extends StatelessWidget {
 
     return Container(
       height: 480,
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onPrimary,
         borderRadius: BorderRadius.circular(8.0),
@@ -47,35 +50,33 @@ class HistoryPage extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            child: DataTable(
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Container(
+              //color: Colors.green,
+              width: double.infinity,
+              constraints: const BoxConstraints(
+                minHeight: 200.0,
+              ),
+              child: DataTable(
                 dataRowMinHeight: 10.0,
                 dataRowMaxHeight: 40.0,
                 horizontalMargin: 4.0,
                 columnSpacing: 25.0,
-                columns: [
+                columns: const [
                   DataColumn(
                     label: Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [Text('Title')],
-                      ),
+                      child: Center(child: Text('Title')),
                     ),
                   ),
                   DataColumn(
                     label: Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [Text('Value')],
-                      ),
+                      child: Center(child: Text('Value')),
                     ),
                   ),
                   DataColumn(
                     label: Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [Text('Date')],
-                      ),
+                      child: Center(child: Text('Date')),
                     ),
                   ),
                 ],
@@ -85,9 +86,12 @@ class HistoryPage extends StatelessWidget {
                     valuesString,
                     dates,
                   ],
-                )),
+                ),
+              ),
+            ),
           ),
-          Padding(
+
+/*           Padding(
             padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -176,7 +180,7 @@ class HistoryPage extends StatelessWidget {
                     )),
               ],
             ),
-          ),
+          ),*/
         ],
       ),
     );

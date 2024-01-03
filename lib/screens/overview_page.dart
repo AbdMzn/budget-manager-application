@@ -16,9 +16,8 @@ class _OverviewPageState extends State<OverviewPage> {
     return Column(
       children: [
         Container(
-          height: 100,
-          margin: EdgeInsets.only(left: 20.0, right: 20, top: 10),
-          padding: EdgeInsets.only(left: 10.0, top: 8),
+          margin: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
+          padding: const EdgeInsets.only(left: 10.0, top: 8),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onPrimary,
             borderRadius: BorderRadius.circular(8.0),
@@ -74,9 +73,8 @@ class _OverviewPageState extends State<OverviewPage> {
           ),
         ),
         Container(
-          height: 375,
-          margin: EdgeInsets.only(left: 20.0, right: 20, top: 10),
-          padding: EdgeInsets.only(top: 8),
+          margin: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
+          padding: const EdgeInsets.only(top: 8),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onPrimary,
             borderRadius: BorderRadius.circular(10.0),
@@ -109,6 +107,9 @@ class _OverviewPageState extends State<OverviewPage> {
                       ),
                     ],
                   ),
+                ),
+                Container(
+                  height: 20,
                 ),
                 Center(
                   child: SizedBox(
@@ -149,7 +150,7 @@ class _OverviewPageState extends State<OverviewPage> {
                               ),
                               Text(
                                 appState.categories[index],
-                                style: TextStyle(fontSize: 10),
+                                style: const TextStyle(fontSize: 10),
                               ),
                               Container(width: 4),
                             ],
@@ -162,6 +163,9 @@ class _OverviewPageState extends State<OverviewPage> {
                       }
                     })),
                   ),
+                ),
+                Container(
+                  height: 55,
                 ),
               ],
             ),

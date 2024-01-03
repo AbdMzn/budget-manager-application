@@ -1,4 +1,7 @@
+import 'package:budget_manager_application/shared/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +9,9 @@ import '/screens/category_page.dart';
 import '/logic/appstate.dart';
 
 class TransactionPage extends StatefulWidget {
+  final User user;
+  final Function? updateData;
+  const TransactionPage({super.key, required this.user, this.updateData});
   @override
   State<TransactionPage> createState() => _TransactionPageState();
 }
@@ -15,71 +21,45 @@ class _TransactionPageState extends State<TransactionPage> {
   TextEditingController _value = TextEditingController();
   TextEditingController _date = TextEditingController();
   TextEditingController _category = TextEditingController();
+  var logger = Logger();
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     _category.text = appState.category;
-
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           centerTitle: true,
-          title: Text('New Transaction'),
+          title: const Text('New Transaction'),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.check),
               tooltip: 'Confirm',
-              onPressed: () {
+              onPressed: () async {
                 Navigator.pop(context);
-                if (appState.transactionExpense) {
-                  appState.newRecord(
-                      _title.text, -double.parse(_value.text), _date.text);
-                } else {
-                  appState.newRecord(
-                      _title.text, double.parse(_value.text), _date.text);
-                }
+                var inputValue = appState.transactionExpense
+                    ? -double.parse(_value.text)
+                    : double.parse(_value.text);
+                await appState.newTransactionRecord(widget.user, _title.text,
+                    inputValue, _date.text, _category.text);
+
+                widget.updateData!();
               },
             ),
           ],
         ),
         body: ListView(
           children: [
-            Container(
-              height: 520,
-              margin: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onPrimary,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              padding: const EdgeInsets.all(10.0),
+            PrimaryContainer(
+              icon: Icons.currency_exchange_rounded,
+              title: "New Transaction",
+              iconSize: 32.0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.currency_exchange_rounded,
-                          size: 32,
-                          color: Theme.of(context).colorScheme.secondary),
-                      Container(
-                        width: 5,
-                      ),
-                      Text(
-                        'Transaction',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          height: 1.1,
-                          fontFamily: 'Poppins',
-                          fontSize: 24.0,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                      ),
-                    ],
-                  ),
                   Container(
                     height: 10,
                   ),
@@ -99,7 +79,7 @@ class _TransactionPageState extends State<TransactionPage> {
                         bottom: 10, left: 10, right: 10, top: 5),
                     child: TextField(
                       controller: _title,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         isDense: true,
                         labelText: 'Enter Title',
                         prefixIcon: Icon(Icons.text_fields),
@@ -131,7 +111,7 @@ class _TransactionPageState extends State<TransactionPage> {
                           RegExp(r'^\d*\.?\d*$'),
                         ),
                       ],
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         isDense: true,
                         labelText: 'Enter Amount',
                         prefixIcon: Icon(Icons.attach_money),
@@ -157,7 +137,7 @@ class _TransactionPageState extends State<TransactionPage> {
                         bottom: 10, left: 10, right: 10, top: 5),
                     child: TextField(
                       controller: _date,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         isDense: true,
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.calendar_today_rounded),
@@ -180,45 +160,50 @@ class _TransactionPageState extends State<TransactionPage> {
                             _date.text = formattedDate;
                           });
                         } else {
-                          print('Date is not selected');
+                          logger.i('Date is not selected');
                         }
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      'Category',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          fontFamily: 'Poppins',
-                          fontSize: 20,
-                          color: Theme.of(context).colorScheme.secondary),
+                  Visibility(
+                    visible: appState.transactionExpense,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        'Category',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.secondary),
+                      ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(
-                        bottom: 10, left: 10, right: 10, top: 5),
-                    child: TextField(
-                      readOnly: true,
-                      controller: _category,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.arrow_downward),
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 10.0),
+                  Visibility(
+                    visible: appState.transactionExpense,
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                          bottom: 10, left: 10, right: 10, top: 5),
+                      child: TextField(
+                        readOnly: true,
+                        controller: _category,
+                        decoration: const InputDecoration(
+                          isDense: true,
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.arrow_downward),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
+                        ),
+                        onTap: () {
+                          //logger.i('Category tapped');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CategoryPage(),
+                            ),
+                          );
+                        },
                       ),
-                      onTap: () {
-                        print('Category tapped');
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CategoryPage(),
-                          ),
-                        );
-                      },
                     ),
                   ),
                   Row(
@@ -277,6 +262,9 @@ class _TransactionPageState extends State<TransactionPage> {
                             color: Theme.of(context).colorScheme.secondary),
                       ),
                     ],
+                  ),
+                  Container(
+                    height: 20,
                   ),
                 ],
               ),

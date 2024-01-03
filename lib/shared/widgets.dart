@@ -4,20 +4,23 @@ class PrimaryContainer extends StatelessWidget {
   final IconData icon;
   final String title;
   final Widget child;
-  final double iconSize = 16;
-  final double fontSize = 24;
+  final double iconSize;
+  final double fontSize;
 
-  const PrimaryContainer({
-    required this.icon,
-    required this.title,
-    required this.child,
-  });
+  const PrimaryContainer(
+      {super.key,
+      required this.icon,
+      required this.title,
+      required this.child,
+      this.iconSize = 16,
+      this.fontSize = 24});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10.0),
-      padding: EdgeInsets.all(10.0),
+      //constraints: BoxConstraints.tightFor(),
+      margin: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onPrimary,
         borderRadius: BorderRadius.circular(8.0),
@@ -34,7 +37,7 @@ class PrimaryContainer extends StatelessWidget {
                 size: iconSize,
                 color: Theme.of(context).colorScheme.secondary,
               ),
-              SizedBox(width: 5),
+              const SizedBox(width: 5),
               Text(
                 title,
                 textAlign: TextAlign.center,
@@ -47,7 +50,7 @@ class PrimaryContainer extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           child,
         ],
       ),
