@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 //import 'package:provider/provider.dart';
 
-class MyAppState extends ChangeNotifier {
+class AppState extends ChangeNotifier {
   var logger = Logger();
   String category = '';
   String transactionOption = 'Expense';

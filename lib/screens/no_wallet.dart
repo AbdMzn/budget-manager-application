@@ -29,7 +29,7 @@ class _NoWalletState extends State<NoWallet> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ChangeNotifierProvider(
-                    create: (context) => MyAppState(),
+                    create: (context) => AppState(),
                     child: NewWallet(user: widget.user),
                   ),
                 ),

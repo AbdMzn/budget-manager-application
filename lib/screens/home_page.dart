@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     Future.delayed(Duration.zero, () async {
-      var appState = context.read<MyAppState>();
+      var appState = context.read<AppState>();
       appState.checkWalletsExistance(widget.user.uid);
       await appState.initializeAppState(widget.user);
       logger.i('walletlist Init: ${appState.walletList}');
@@ -38,10 +38,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
+    var appState = context.watch<AppState>();
     var walletExists = appState.walletExists;
     void updateData() async {
       await appState.checkWalletsExistance(widget.user.uid);
+      await appState.getWalletName(widget.user);
+      await appState.getWalletList(widget.user);
       await appState.getBalance(widget.user);
       await appState.setRecordValues(widget.user);
       logger.i("updateData called");

@@ -25,7 +25,7 @@ class _TransactionPageState extends State<TransactionPage> {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
+    var appState = context.watch<AppState>();
     _category.text = appState.category;
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,

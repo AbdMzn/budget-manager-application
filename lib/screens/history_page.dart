@@ -9,7 +9,7 @@ class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key, required this.user});
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
+    var appState = context.watch<AppState>();
     var titles = appState.titles.toList();
     var values = appState.values.toList();
     var dates = appState.dates.toList();

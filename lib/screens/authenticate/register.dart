@@ -3,6 +3,7 @@ import 'package:budget_manager_application/shared/constants.dart';
 import 'package:budget_manager_application/shared/loading.dart';
 //import 'package:budget_manager_application/logic/appstate.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class Register extends StatefulWidget {
   final Function? toggleView;
@@ -15,6 +16,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  var logger = Logger();
   String error = '';
   bool loading = false;
 
@@ -98,10 +100,15 @@ class _RegisterState extends State<Register> {
                                     await _auth.registerWithEmailAndPassword(
                                         email, password);
                                 if (result == null) {
-                                  setState(() {
-                                    loading = false;
-                                    error = 'Please supply a valid email';
-                                  });
+                                  try {
+                                    setState(() {
+                                      loading = false;
+                                      error = 'Please supply a valid email';
+                                    });
+                                  } catch (e) {
+                                    logger.e(
+                                        "Error setting loading screen to false $e");
+                                  }
                                 }
                               }
                             }),

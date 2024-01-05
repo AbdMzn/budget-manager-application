@@ -18,7 +18,7 @@ class _WalletListPageState extends State<WalletListPage> {
   var logger = Logger();
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
+    var appState = context.watch<AppState>();
 
     logger.i("User id: ${widget.user?.uid}");
     logger.i("wallets: ${appState.walletList}");

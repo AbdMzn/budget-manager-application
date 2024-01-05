@@ -11,14 +11,15 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('users');
 
   Future<void> updateUserData(String uid) async {
-    return await usersCollection.doc(uid).update({
+    return await usersCollection.doc(uid).set({
       'uid': uid,
     });
   }
 
   Future<bool> createNewWallet(String walletName, double balance) async {
     try {
-      var document = FirebaseFirestore.instance.collection('users').doc(uid);
+      DocumentReference document =
+          FirebaseFirestore.instance.collection('users').doc(uid);
 
       await document.update({
         'selected_wallet': walletName,
