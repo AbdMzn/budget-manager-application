@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
         pageName = 'History';
       case 2:
         //page = walletExists ? const Placeholder() : noWalletPage;
-        page = noWalletPage;
+        page = const Placeholder();
         pageName = 'Budget';
       case 3:
         page = SettingsPage(
