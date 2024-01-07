@@ -1,3 +1,4 @@
+import 'package:budget_manager_application/logic/appstate.dart';
 import 'package:budget_manager_application/shared/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import '/screens/category_page.dart';
-import '/logic/appstate.dart';
+import 'category_page.dart';
 
 class TransactionPage extends StatefulWidget {
   final User user;

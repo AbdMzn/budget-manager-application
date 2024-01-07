@@ -40,24 +40,3 @@ class App extends StatelessWidget {
     );
   }
 }
-
-
-/* class App extends StatelessWidget {
-  const App({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AppState(),
-      child: MaterialApp(
-        title: 'Budget Manager',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-              secondary: const Color.fromARGB(255, 0, 18, 59),
-              seedColor: const Color.fromARGB(255, 78, 111, 255)),
-        ),
-        home: Wrapper(),
-      ),
-    );
-  }
-} */

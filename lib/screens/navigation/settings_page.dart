@@ -1,8 +1,11 @@
-import 'package:budget_manager_application/screens/wallet_list_page.dart';
+import 'package:budget_manager_application/logic/appstate.dart';
+import 'package:budget_manager_application/screens/navigation/new_wallet.dart';
+import 'package:budget_manager_application/screens/navigation/wallet_selection_page.dart';
 import 'package:budget_manager_application/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   final User? user;
@@ -27,10 +30,25 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => WalletListPage(user: widget.user),
+                  builder: (context) => WalletSelectPage(user: widget.user),
                 ),
               ).then((value) {
-                widget.updateData!();
+                var trigger = value ?? false;
+                if (trigger) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChangeNotifierProvider(
+                        create: (context) => AppState(),
+                        child: NewWallet(user: widget.user),
+                      ),
+                    ),
+                  ).then((trigger) {
+                    widget.updateData!();
+                  });
+                } else {
+                  widget.updateData!();
+                }
               });
             },
             style: ElevatedButton.styleFrom(

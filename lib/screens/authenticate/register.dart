@@ -1,7 +1,6 @@
 import 'package:budget_manager_application/services/auth.dart';
 import 'package:budget_manager_application/shared/constants.dart';
 import 'package:budget_manager_application/shared/loading.dart';
-//import 'package:budget_manager_application/logic/appstate.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 

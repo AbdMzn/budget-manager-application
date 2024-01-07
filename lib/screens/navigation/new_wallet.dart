@@ -1,4 +1,3 @@
-//import 'package:budget_manager_application/logic/appstate.dart';
 import 'package:budget_manager_application/services/database.dart';
 import 'package:budget_manager_application/shared/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';

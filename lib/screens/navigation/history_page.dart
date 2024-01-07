@@ -1,8 +1,8 @@
+import 'package:budget_manager_application/logic/appstate.dart';
+import 'package:budget_manager_application/utils/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '/logic/appstate.dart';
-import '../utils/functions.dart';
 
 class HistoryPage extends StatelessWidget {
   final User user;

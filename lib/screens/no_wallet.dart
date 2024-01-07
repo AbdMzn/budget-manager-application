@@ -1,5 +1,5 @@
 import 'package:budget_manager_application/logic/appstate.dart';
-import 'package:budget_manager_application/screens/new_wallet.dart';
+import 'package:budget_manager_application/screens/navigation/new_wallet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';

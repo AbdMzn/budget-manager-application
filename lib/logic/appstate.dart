@@ -10,6 +10,7 @@ class AppState extends ChangeNotifier {
   String transactionOption = 'Expense';
   String? walletName = "default";
   bool transactionExpense = true;
+  bool walletPageEdit = false;
   bool _walletsExists = false;
   bool get walletExists => _walletsExists;
   DateTime currentDate = DateTime.now();

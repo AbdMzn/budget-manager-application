@@ -1,14 +1,14 @@
 import 'package:budget_manager_application/logic/appstate.dart';
+import 'package:budget_manager_application/screens/navigation/history_page.dart';
+import 'package:budget_manager_application/screens/navigation/transaction_page.dart';
+import 'package:budget_manager_application/screens/navigation/settings_page.dart';
+import 'package:budget_manager_application/screens/navigation/overview_page.dart';
 import 'package:budget_manager_application/screens/no_wallet.dart';
-import 'package:budget_manager_application/screens/settings_page.dart';
+import 'package:budget_manager_application/shared/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import '/screens/transaction_page.dart';
-//import '/services/auth.dart';
-import './history_page.dart';
-import './overview_page.dart';
 
 class HomePage extends StatefulWidget {
   final User user;
@@ -18,10 +18,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  //final AuthService _auth = AuthService();
   var selectedIndex = 0;
   var pageName = 'Home';
   var logger = Logger();
+  bool loaded = false;
 
   @override
   void initState() {
@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
       await appState.initializeAppState(widget.user);
       logger.i('walletlist Init: ${appState.walletList}');
       logger.i('Homepage user id: ${widget.user.uid}');
+      loaded = true;
     });
   }
 
@@ -108,7 +109,7 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: Container(
                 color: Theme.of(context).colorScheme.primaryContainer,
-                child: page,
+                child: loaded ? page : const Loading(),
               ),
             ),
           ],

@@ -9,10 +9,19 @@ class OverviewPage extends StatefulWidget {
 }
 
 class _OverviewPageState extends State<OverviewPage> {
+  double arraySum(List<double> array) {
+    double sum = 0.0;
+    for (double value in array) {
+      sum += value;
+    }
+    return sum;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Color secondaryColor = Theme.of(context).colorScheme.secondary;
     var appState = context.watch<AppState>();
-    var balance = appState.balance.toString();
+    var balance = appState.balance.round().toString();
     return Column(
       children: [
         Container(
@@ -30,7 +39,7 @@ class _OverviewPageState extends State<OverviewPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(Icons.currency_exchange_rounded,
-                      size: 28, color: Theme.of(context).colorScheme.secondary),
+                      size: 28, color: secondaryColor),
                   Container(
                     width: 6,
                   ),
@@ -41,7 +50,7 @@ class _OverviewPageState extends State<OverviewPage> {
                       height: 1.1,
                       fontFamily: 'Poppins',
                       fontSize: 24.0,
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: secondaryColor,
                     ),
                   ),
                 ],
@@ -60,7 +69,7 @@ class _OverviewPageState extends State<OverviewPage> {
                       height: 1.1,
                       fontFamily: 'Poppins',
                       fontSize: 32.0,
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: secondaryColor,
                     ),
                   ),
                 ],
@@ -90,8 +99,7 @@ class _OverviewPageState extends State<OverviewPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(Icons.assessment_outlined,
-                          size: 32,
-                          color: Theme.of(context).colorScheme.secondary),
+                          size: 32, color: secondaryColor),
                       Container(
                         width: 5,
                       ),
@@ -102,32 +110,47 @@ class _OverviewPageState extends State<OverviewPage> {
                           height: 1.1,
                           fontFamily: 'Poppins',
                           fontSize: 18.0,
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: secondaryColor,
                         ),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  height: 20,
+                  height: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 30.0),
+                  child: Text(
+                    "\$${arraySum(appState.categoryValues).round()}",
+                    style: TextStyle(fontSize: 32.0, color: secondaryColor),
+                  ),
                 ),
                 Center(
                   child: SizedBox(
                     width: 200,
                     height: 225,
                     child: PieChart(PieChartData(
-                      sectionsSpace: 0,
-                      borderData: FlBorderData(show: false),
-                      sections: List.generate(
-                        appState.categoryValues.length,
-                        (index) => PieChartSectionData(
-                          value: appState.categoryValues[index],
-                          color: appState.categoryColors[index],
-                          title: '',
-                          radius: 30,
-                        ),
-                      ),
-                    )),
+                        sectionsSpace: 0,
+                        borderData: FlBorderData(show: false),
+                        sections: (arraySum(appState.categoryValues) != 0)
+                            ? List.generate(
+                                appState.categoryValues.length,
+                                (index) => PieChartSectionData(
+                                  value: appState.categoryValues[index],
+                                  color: appState.categoryColors[index],
+                                  title: '',
+                                  radius: 30,
+                                ),
+                              )
+                            : [
+                                PieChartSectionData(
+                                  value: 1,
+                                  color: const Color(0xFF808080), // Grey color
+                                  title: '',
+                                  radius: 30,
+                                ),
+                              ])),
                   ),
                 ),
                 Center(
