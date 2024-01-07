@@ -17,7 +17,6 @@ class HistoryPage extends StatelessWidget {
         values.map((intNumber) => '$intNumber\$').toList();
 
     return Container(
-      height: 480,
       margin: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onPrimary,
@@ -50,47 +49,49 @@ class HistoryPage extends StatelessWidget {
               ],
             ),
           ),
-          SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Container(
-              //color: Colors.green,
-              width: double.infinity,
-              constraints: const BoxConstraints(
-                minHeight: 200.0,
-              ),
-              child: DataTable(
-                dataRowMinHeight: 10.0,
-                dataRowMaxHeight: 40.0,
-                horizontalMargin: 4.0,
-                columnSpacing: 25.0,
-                columns: const [
-                  DataColumn(
-                    label: Expanded(
-                      child: Center(child: Text('Title')),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Container(
+                //color: Colors.green,
+                width: double.infinity,
+                constraints: const BoxConstraints(
+                  minHeight: 200.0,
+                ),
+                child: DataTable(
+                  dataRowMinHeight: 10.0,
+                  dataRowMaxHeight: 40.0,
+                  horizontalMargin: 4.0,
+                  columnSpacing: 25.0,
+                  columns: const [
+                    DataColumn(
+                      label: Expanded(
+                        child: Text('Title'),
+                      ),
                     ),
-                  ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Center(child: Text('Value')),
+                    DataColumn(
+                      label: Expanded(
+                        child: Text('Value'),
+                      ),
                     ),
-                  ),
-                  DataColumn(
-                    label: Expanded(
-                      child: Center(child: Text('Date')),
+                    DataColumn(
+                      label: Expanded(
+                        child: Text('Date'),
+                      ),
                     ),
-                  ),
-                ],
-                rows: buildRows(
-                  [
-                    titles,
-                    valuesString,
-                    dates,
                   ],
+                  rows: buildRows(
+                    [
+                      titles,
+                      valuesString,
+                      dates,
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-
 /*           Padding(
             padding: const EdgeInsets.only(right: 10.0, bottom: 10.0),
             child: Row(
