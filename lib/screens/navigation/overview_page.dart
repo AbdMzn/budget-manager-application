@@ -22,7 +22,7 @@ class _OverviewPageState extends State<OverviewPage> {
     final Color secondaryColor = Theme.of(context).colorScheme.secondary;
     var appState = context.watch<AppState>();
     var balance = appState.balance.round().toString();
-    return Column(
+    return ListView(
       children: [
         Container(
           margin: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
@@ -82,7 +82,8 @@ class _OverviewPageState extends State<OverviewPage> {
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
+          margin:
+              const EdgeInsets.only(left: 20.0, right: 20, top: 10, bottom: 10),
           padding: const EdgeInsets.only(top: 8),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onPrimary,
